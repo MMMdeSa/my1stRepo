@@ -1,11 +1,15 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  	
   <header>
-  <h1>Name: Mario</h1>
+  <h1>Who: Mario</h1>
   </header>
   <body>
-  <p>Harried data analyst with much to learn</p>
+  <p>Harried data analyst with little time and much to learn</p>
   
   <ul>Hobbies, in no particular order:
     <p></p>
@@ -27,6 +31,69 @@
   
   <p></p>
   
+  <title>My First D3 Bar Chart</title>
+  <!-- Download the D3 library from a CDN. Internet access is required. -->
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 32px; color: #252525; }
+    svg { display: block; max-width: 100%; height: auto; }
+  </style>
+</head>
+<body>
+  <h1>Had to begin with a very basic D3 Bar Chart</h1>
+  <!-- This starts as an empty drawing area. D3 adds the bars and axes. -->
+  <svg id="chart" width="520" height="320" viewBox="0 0 520 320" role="img"
+       aria-label="Bar chart showing A equals 1, B equals 5, C equals 8, and D equals 10"></svg>
+
+  <script>
+    // 1. The data we're visualising.
+    const data = [
+      { name: "A", value: 1 },
+      { name: "B", value: 5 },
+      { name: "C", value: 8 },
+      { name: "D", value: 10 }
+    ];
+
+    // 2. Find our empty SVG drawing area.
+    const svg = d3.select("#chart");
+    const width = 520;
+    const height = 320;
+    const margin = { top: 20, right: 20, bottom: 45, left: 45 };
+
+    // 3. Work out where each category belongs horizontally.
+    const x = d3.scaleBand()
+      .domain(data.map(d => d.name))
+      .range([margin.left, width - margin.right])
+      .padding(0.2);
+
+    // 4. Convert each numerical value into a vertical position.
+    const y = d3.scaleLinear()
+      .domain([0, d3.max(data, d => d.value)])
+      .nice()
+      .range([height - margin.bottom, margin.top]);
+
+    // 5. Add one rectangle for each object in the array.
+    svg.selectAll("rect")
+      .data(data)
+      .join("rect")
+      .attr("x", d => x(d.name))
+      .attr("y", d => y(d.value))
+      .attr("width", x.bandwidth())
+      .attr("height", d => y(0) - y(d.value))
+      .attr("fill", "#4d79da");
+
+    // 6. Add the horizontal and vertical axes.
+    svg.append("g")
+      .attr("transform", `translate(0, ${height - margin.bottom})`)
+      .call(d3.axisBottom(x));
+
+    svg.append("g")
+      .attr("transform", `translate(${margin.left}, 0)`)
+      .call(d3.axisLeft(y));
+  </script>
+</body>
+</html>
+
   <img
       src="https://picsum.photos/300/200"
       alt="A random placeholder image"
